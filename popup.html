@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>My Extension</title>
+    <script src="popup.js"></script>
+    <style>
+      body {
+        width: 320px;
+        height: 240px;
+        background-color: #f4f4f4;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+      button {
+        display: block;
+        width: 100%;
+        max-width: 250px;
+        margin: 0 auto;
+        margin-top: 20px;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        background-color: #4CAF50;
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #3e8e41;
+      }
+      #output {
+        margin-top: 20px;
+        padding: 10px;
+        background-color: #fff;
+        border-radius: 4px;
+        overflow-wrap: break-word;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="button1">Scan Question</button>
+    <button id="button2">Scan Answer</button>
+    <button id="button3">Select Answer</button>
+    <div id="output">A bunch of really really long text</div>
+  </body>
+</html>
