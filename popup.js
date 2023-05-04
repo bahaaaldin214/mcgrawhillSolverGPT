@@ -41,13 +41,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Send a message to the background script to save the message
     
 
-    
+    button3.style.display = "inline-block";
+
     executeScript("button1.js", function(prompt){
       
       const question = `
 question: ${prompt[0]}
       
-please respond back with only one or multiple of these options, do not bother with an explanation.${prompt[1].join(", ")}
+please select the best option(S?). Here are your options: ${prompt[1].reduce((a, c, i )  =>  a + (i+1) + ": "  + " " + c + " \n ", "\n")}
       `,
 
       key = Math.random();
