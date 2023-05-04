@@ -23,6 +23,8 @@ function waiter(x) {
   return new Promise(resolve => setTimeout(resolve, x));
 }
 
+let start = false;
+
 // Wait for the DOM to be ready
 document.addEventListener('DOMContentLoaded', function() {
   
@@ -67,7 +69,7 @@ please select the best option(S?). Here are your options: ${prompt[1].reduce((a,
     // Send a message to the background script to save the message
     const checkLocal= await recieveLocal('question');
     
-    if(!checkLocal || checkLocal.question) {
+    if(!checkLocal || !checkLocal.question) {
       saveOnLocal("status", {value: "scanning for answer but no question, deleting in 5 seconds"});
       setTimeout(() => {
         saveOnLocal("status", {value: "Ready to scan question"});
@@ -81,17 +83,26 @@ please select the best option(S?). Here are your options: ${prompt[1].reduce((a,
       saveOnLocal("current", {value: "start2"});
       saveOnLocal('question', null);
 
+
       waiter(2000).then(() => { //question should now be excuted, give time to  answer
         saveOnLocal("sumbit", {value: true})
       });
       await waiter(10000);
       recieveLocal("current").then(async ({value}) => {
-        console.log("value is: " + value)
-        button2.dispatchEvent(new Event('click'));
+        
+       start = true;
       })
       
     });
   });
+
+  function loop(){
+    requestAnimationFrame(loop);
+    if(start){
+      button2.dispatchEvent(new Event('click'));
+    }
+  }
+  loop();
 
   button3.addEventListener('click', function(){
     recieveLocal("current").then(({value}) => {
@@ -101,6 +112,7 @@ please select the best option(S?). Here are your options: ${prompt[1].reduce((a,
         executeScript("button3.js", async () => {
           //fake button1 press
           await waiter(1000);
+          start = true;
           button1.dispatchEvent(new Event('click'));
           //quuestion is being asked, so it shouldn't try to sumbit yet
           saveOnLocal("sumbit", {value: false})
