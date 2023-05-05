@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const output = document.getElementById("output");
   // Add a click event listener to the button
   
-  setInterval(async ()=> {
+  let updater = setInterval(async ()=> {
     recieveLocal("status").then(({value}) => output.innerText = value + new Date().toLocaleTimeString())
   }, 500)
 
@@ -67,6 +67,20 @@ please select the best option(S?). Here are your options: ${prompt[1].reduce((a,
 
   button2.addEventListener('click', async function() {
     // Send a message to the background script to save the message
+    start = true;
+    clearInterval(updater);
+    output.innerText = "Auto paste answer. Click Question Or sumbit on Homework tab."
+    document.body.style.height = "100PX";
+    button2.style.display = button1.style.display = "none";
+  });
+
+  async function loop(){
+    requestAnimationFrame(loop);
+    if(!start){
+      // button2.dispatchEvent(new Event('click'));
+      return;
+    }
+
     const checkLocal= await recieveLocal('question');
     
     if(!checkLocal || !checkLocal.question) {
@@ -75,8 +89,10 @@ please select the best option(S?). Here are your options: ${prompt[1].reduce((a,
         saveOnLocal("status", {value: "Ready to scan question"});
       }, 5000);
     }
+    
+    if(!checkLocal?.question) return;
     const {question} = checkLocal;
-  
+
     executeScript("button2.js", async function(result, tabs){
       saveOnLocal("status", {value: "question found, scanning for answers, asked at: " + new Date().toLocaleTimeString() })
       //do some code to automatically select answer 
@@ -88,19 +104,11 @@ please select the best option(S?). Here are your options: ${prompt[1].reduce((a,
         saveOnLocal("sumbit", {value: true})
       });
       await waiter(10000);
-      recieveLocal("current").then(async ({value}) => {
         
-       start = true;
-      })
-      
-    });
-  });
+     start = true;
 
-  function loop(){
-    requestAnimationFrame(loop);
-    if(start){
-      button2.dispatchEvent(new Event('click'));
-    }
+    });
+
   }
   loop();
 
